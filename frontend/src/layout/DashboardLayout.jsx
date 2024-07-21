@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { MdDashboard, MdDashboardCustomize } from "react-icons/md";
 import LoadingSpinner from "../components/LoadingSpinner"
@@ -17,6 +17,7 @@ import { FaCartShopping } from "react-icons/fa6";
 import Login from "../components/Login";
 import useAdmin from "../hooks/useAdmin";
 import useAuth from "../hooks/useAuth";
+import { AuthContext } from "../contexts/AuthProvider";
 
 const sharedLinks = (
   <>
@@ -40,6 +41,20 @@ const sharedLinks = (
 const DashboardLayout = () => {
   const {loading} = useAuth()
   const [isAdmin, isAdminLoading] = useAdmin()
+  const { logOut } = useContext(AuthContext);
+
+
+  // logout
+  const handleLogout = () => {
+    logOut()
+      .then(() => {
+        // Sign-out successful.
+        navigate("/")
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <div>
     {
@@ -54,7 +69,7 @@ const DashboardLayout = () => {
           >
             <MdDashboardCustomize />
           </label>
-          <button className="btn rounded-full px-6 bg-green flex items-center gap-2 text-white sm:hidden">
+          <button className="btn rounded-full px-6 bg-green flex items-center gap-2 text-white sm:hidden" onClick={handleLogout}>
             <FaRegUser /> Logout
           </button>
         </div>
